@@ -16,19 +16,24 @@ PG_READY="pg_isready -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USERNAME"
 until $PG_READY
 do
   sleep 2;
-done
+  done
 
-echo "Database ready to accept connections."
+  echo "Database ready to accept connections."
 
-#install missing gems for local dev as we are using base image compiled for production
-bundle install
+  #install missing gems for local dev as we are using base image compiled for production
+  bundle install
 
-BUNDLE="bundle check"
+  BUNDLE="bundle check"
 
-until $BUNDLE
-do
-  sleep 2;
-done
+  until $BUNDLE
+  do
+    sleep 2;
+    done
 
-# Execute the main process of the container
-exec "$@"
+    # MagistralChat: apply enterprise configs on every startup (idempotent)
+    if [ "${RAILS_ENV}" != "test" ]; then
+      bundle exec rails runner db/seeders/enterprise_setup.rb || true
+      fi
+
+      # Execute the main process of the container
+      exec "$@"
