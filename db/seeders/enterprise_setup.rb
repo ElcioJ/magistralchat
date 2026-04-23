@@ -4,9 +4,11 @@
 # Or call from db/seeds.rb: load Rails.root.join('db/seeders/enterprise_setup.rb')
 #
 # It is idempotent — safe to run multiple times.
+# DASHBOARD_SCRIPTS is only created if it does not exist (preserves UI edits).
 
 puts "[MagistralChat] Running enterprise_setup..."
 
+# ─── Configs always enforced (overwrite on every deploy) ──────────────────────
 ENTERPRISE_CONFIGS = {
     'INSTALLATION_NAME'               => 'MagistralChat',
     'INSTALLATION_PRICING_PLAN'       => 'enterprise',
@@ -24,6 +26,21 @@ ENTERPRISE_CONFIGS.each do |key, value|
           puts "[MagistralChat] Set #{key} = #{value}"
     else
           puts "[MagistralChat] #{key} already correct (#{value})"
+    end
+end
+
+# ─── Configs created once — never overwritten (editable via Super Admin UI) ───
+OPTIONAL_CONFIGS = {
+    'DASHBOARD_SCRIPTS' => ''
+}.freeze
+
+OPTIONAL_CONFIGS.each do |key, default_value|
+    config = InstallationConfig.find_by(name: key)
+    if config.nil?
+          InstallationConfig.create!(name: key, value: default_value)
+          puts "[MagistralChat] Created #{key} (default empty — edit via Super Admin)"
+    else
+          puts "[MagistralChat] #{key} already exists — skipping (UI value preserved)"
     end
 end
 
