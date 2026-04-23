@@ -125,5 +125,26 @@
         </div>
       <% end %>
     </div>
+
+  <%# ─── MagistralChat: Custom Scripts ─────────────────────────────────────── %>
+  <% dashboard_scripts_config = InstallationConfig.find_by(name: 'DASHBOARD_SCRIPTS') %>
+  <% if dashboard_scripts_config %>
+    <div class="mt-10 py-4">
+      <h3 class="h-5 leading-5 text-n-slate-12 font-medium text-base">MagistralChat</h3>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-2">
+      <div class="group outline outline-1 outline-n-container rounded-lg p-4 relative shadow-sm">
+        <div class="flex items-center justify-between mb-1.5 mt-4">
+          <div class="flex items-center gap-2">
+            <h3 class="text-n-slate-12 font-medium"><%= t('super_admin.installation_configs.dashboard_scripts.title', default: 'Dashboard Scripts') %></h3>
+          </div>
+          <a class="inline-flex items-center justify-center h-5 w-5 hover:bg-slate-50 rounded-sm" href="<%= edit_super_admin_installation_config_path(dashboard_scripts_config) %>">
+            <svg width="18" height="18"><use xlink:href="#icon-gear" /></svg>
+          </a>
+        </div>
+        <p class="text-n-slate-11 mb-0"><%= t('super_admin.installation_configs.dashboard_scripts.description', default: 'Custom JavaScript/CSS injected at the end of the <body> tag on every page.') %></p>
+      </div>
+    </div>
+  <% end %>
   </div>
 </section>
