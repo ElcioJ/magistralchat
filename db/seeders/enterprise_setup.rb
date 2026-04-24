@@ -37,7 +37,7 @@ OPTIONAL_CONFIGS = {
 OPTIONAL_CONFIGS.each do |key, default_value|
     config = InstallationConfig.find_by(name: key)
     if config.nil?
-          InstallationConfig.create!(name: key, value: default_value)
+          InstallationConfig.create!(name: key, value: default_value, locked: false)
           puts "[MagistralChat] Created #{key} (default empty — edit via Super Admin)"
     else
           puts "[MagistralChat] #{key} already exists — skipping (UI value preserved)"
